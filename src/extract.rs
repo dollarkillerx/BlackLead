@@ -24,17 +24,7 @@ pub(crate) fn extract_digits_pro(s: &str) -> (&str, &str) {
 
 
 pub(crate) fn extract_digits_plus(s: &str) -> (&str, &str) {
-    let digits_end = s
-        .char_indices()
-        .find_map(|(idx, c)|
-            if c.is_ascii_digit() { None } else { Some(idx) }
-        )
-        .unwrap_or_else(|| s.len());
-
-    // println!("s: {}, idx: {}  len: {}", s, digits_end,s.len());
-    let digits = &s[..digits_end];
-    let remainder = &s[digits_end..];
-    (remainder, digits)
+    task_while(|s| { if s.is_ascii_digit() { true } else { false } }, s)
 }
 
 pub(crate) fn extract_op(s: &str) -> (&str, &str) {
@@ -47,15 +37,7 @@ pub(crate) fn extract_op(s: &str) -> (&str, &str) {
 }
 
 pub(crate) fn extract_whitespace(s: &str) -> (&str, &str) {
-    let whitespace_end = s
-        .char_indices()
-        .find_map(|(idx, c)| {
-            println!("idx: {} c : {}", idx, c);
-            if c == ' ' { None } else { Some(idx) }
-        })
-        .unwrap_or_else(|| s.len());
-
-    (&s[whitespace_end..], &s[..whitespace_end])
+    task_while(|s| { if s == ' ' { true } else { false } }, s)
 }
 
 pub(crate) fn task_while(accept: impl Fn(char) -> bool, s: &str) -> (&str, &str) {
@@ -68,7 +50,9 @@ pub(crate) fn task_while(accept: impl Fn(char) -> bool, s: &str) -> (&str, &str)
                 None
             }
         })
-        .unwrap_or_else(|| s.len());
+        .unwrap_or_else({
+            || s.len()
+        });
 
     (&s[end..], &s[..end])
 }
