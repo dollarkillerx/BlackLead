@@ -1,3 +1,6 @@
+use super::*;
+use extract::{extract_op, extract_digits_plus};
+
 #[derive(Debug, PartialEq)]
 pub struct Number(pub i32);
 
@@ -35,15 +38,20 @@ pub struct Expr {
 }
 
 impl Expr {
-    pub fn new(s: &str) -> Self {
-        let lhs = Number::new(s);
-        let rhs = Number::new(s);
-        let op = Op::new(s);
+    pub fn new(s: &str) -> (&str, Self) {
+        let (s, lhs) = extract_digits_plus(s);
+        let lhs = Number::new(lhs);
 
-        Self {
+        let (s, op) = extract_op(s);
+        let op = Op::new(op);
+
+        let (s, rhs) = extract_digits_plus(s);
+        let rhs = Number::new(rhs);
+
+        (s, Self {
             lhs,
             rhs,
             op,
-        }
+        })
     }
 }
