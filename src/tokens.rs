@@ -1,5 +1,6 @@
 use super::*;
 use extract::{extract_op, extract_digits_plus};
+use crate::extract::extract_whitespace;
 
 #[derive(Debug, PartialEq)]
 pub struct Number(pub i32);
@@ -39,13 +40,17 @@ pub struct Expr {
 
 impl Expr {
     pub fn new(s: &str) -> (&str, Self) {
+        let (s, _) = extract_whitespace(s);
         let (s, lhs) = extract_digits_plus(s);
         let lhs = Number::new(lhs);
+        let (s, _) = extract_whitespace(s);
 
         let (s, op) = extract_op(s);
         let op = Op::new(op);
+        let (s, _) = extract_whitespace(s);
 
         let (s, rhs) = extract_digits_plus(s);
+        let (s, _) = extract_whitespace(s);
         let rhs = Number::new(rhs);
 
         (s, Self {

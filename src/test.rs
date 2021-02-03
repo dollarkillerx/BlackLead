@@ -69,7 +69,7 @@ mod test {
         // )
 
         assert_eq!(
-            Expr::new("1+2"),
+            Expr::new("   1   +   2   "),
             (
                 "",
                 Expr {

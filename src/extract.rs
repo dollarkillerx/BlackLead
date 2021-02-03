@@ -23,10 +23,12 @@ pub(crate) fn extract_digits_pro(s: &str) -> (&str, &str) {
 }
 
 
+// 数字识别
 pub(crate) fn extract_digits_plus(s: &str) -> (&str, &str) {
     task_while(|s| { if s.is_ascii_digit() { true } else { false } }, s)
 }
 
+// 操作符识别
 pub(crate) fn extract_op(s: &str) -> (&str, &str) {
     match &s[0..1] {
         "+" | "-" | "*" | "/" => {}
@@ -36,8 +38,25 @@ pub(crate) fn extract_op(s: &str) -> (&str, &str) {
     (&s[1..], &s[0..1])
 }
 
+// 空格消散
 pub(crate) fn extract_whitespace(s: &str) -> (&str, &str) {
     task_while(|s| { if s == ' ' { true } else { false } }, s)
+}
+
+// 变量 识别
+pub(crate) fn extract_ident(s: &str) -> (&str, &str) {
+    // 是否以字母开头
+    let input_starts_with_alphabetic = s
+        .chars()
+        .next()
+        .map(|c| c.is_ascii_digit())
+        .unwrap_or(false);
+
+    if input_starts_with_alphabetic {
+        task_while(|c| c.is_ascii_alphanumeric(), s)
+    } else {
+        (s, "")
+    }
 }
 
 pub(crate) fn task_while(accept: impl Fn(char) -> bool, s: &str) -> (&str, &str) {
@@ -56,3 +75,4 @@ pub(crate) fn task_while(accept: impl Fn(char) -> bool, s: &str) -> (&str, &str)
 
     (&s[end..], &s[..end])
 }
+
